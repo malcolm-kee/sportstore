@@ -1,0 +1,53 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col bg-dark text-white">
+      <a class="navbar-brand">SPORTS STORE</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3 p-2">
+      <div>
+        <button
+          (click)="filterCategory(undefined)"
+          class="btn btn-block btn-outline-primary"
+        >
+          Home
+        </button>
+        <button
+          *ngFor="let category of categories$ | async"
+          (click)="filterCategory(category)"
+          class="btn btn-block btn-outline-primary"
+          [class.active]="category === selectedCategory"
+          type="button"
+        >
+          {{ category }}
+        </button>
+      </div>
+    </div>
+    <div class="col-9 p-2">
+      <div
+        *ngFor="let product of displayedProducts$ | async"
+        class="card m-1 p-1 bg-light"
+      >
+        <h4>
+          {{ product.name }}
+          <span class="badge badge-pill badge-primary float-right">
+            {{ product.price | currency: 'USD':'symbol':'2.2-2' }}
+          </span>
+        </h4>
+        <div class="card-text bg-white p-1">{{ product.description }}</div>
+      </div>
+      <div class="list-group list-group-horizontal">
+        <button
+          *ngFor="let pageNum of pageNumbers$ | async; index as i"
+          class="list-group-item list-group-item-action"
+          [class.active]="i === currentPage"
+          (click)="setCurrentPage(i)"
+          type="button"
+        >
+          {{ pageNum }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
