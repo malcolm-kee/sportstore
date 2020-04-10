@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductRepository } from '../model';
 import { map } from 'rxjs/operators';
+import { Cart, Product, ProductRepository } from '../model';
 
 @Component({
   selector: 'app-store',
@@ -8,7 +8,10 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./store.component.scss'],
 })
 export class StoreComponent implements OnInit {
-  constructor(private productRepository: ProductRepository) {}
+  constructor(
+    private productRepository: ProductRepository,
+    private cart: Cart
+  ) {}
 
   ngOnInit(): void {}
 
@@ -40,12 +43,21 @@ export class StoreComponent implements OnInit {
     );
   }
 
+  setCurrentPage(pageNum: number) {
+    this.currentPage = pageNum;
+  }
+
   filterCategory(category: string | undefined) {
     this.selectedCategory = category;
     this.setCurrentPage(0);
   }
 
-  setCurrentPage(pageNum: number) {
-    this.currentPage = pageNum;
+  changePageSize(pageSize: string) {
+    this.productsPerPage = Number(pageSize);
+    this.setCurrentPage(0);
+  }
+
+  addProductToCart(product: Product) {
+    this.cart.addLine(product);
   }
 }
