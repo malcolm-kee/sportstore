@@ -42,6 +42,12 @@ import { StoreModule } from './store/store.module';
         component: CheckoutComponent,
         canActivate: [StoreFirstGuard],
       },
+      {
+        path: 'admin',
+        loadChildren: () =>
+          import('./admin/admin.module').then((mod) => mod.AdminModule),
+        canActivate: [StoreFirstGuard],
+      },
       { path: '**', redirectTo: '/store' },
     ]),
     NgrxStore.forRoot({

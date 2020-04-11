@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { StaticDataSource } from './static.datasource';
+import { RestDataSource } from './rest.datasource';
+import { Product } from './product.model';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductRepository {
-  constructor(private dataSource: StaticDataSource) {}
+  constructor(private dataSource: RestDataSource) {}
 
-  private $products = this.dataSource.getProducts();
-  private $categories = this.$products.pipe(
+  private products$ = this.dataSource.getProducts();
+  private categories$ = this.products$.pipe(
     map((products) =>
       products
         .map((product) => product.category)
@@ -20,23 +22,35 @@ export class ProductRepository {
     )
   );
 
-  getProducts(category?: string) {
-    return this.$products.pipe(
+  getProducts(category?: string): Observable<Product[]> {
+    return this.products$.pipe(
       map((products) =>
-        typeof category !== 'undefined'
-          ? products.filter((p) => p.category === category)
+        category
+          ? products.filter((product) => product.category === category)
           : products
       )
     );
   }
 
-  getProduct(id: number) {
-    return this.$products.pipe(
+  getProduct(id: number): Observable<Product> {
+    return this.products$.pipe(
       map((products) => products.find((product) => product.id === id))
     );
   }
 
-  getCategories() {
-    return this.$categories;
+  getCategories(): Observable<string[]> {
+    return this.categories$;
+  }
+
+  saveProduct(product: Product) {
+    if (product.id == null || product.id == 0) {
+      this.dataSource.saveProduct(product).toPromise();
+    } else {
+      this.dataSource.updateProduct(product).toPromise();
+    }
+  }
+
+  deleteProduct(id: number) {
+    this.dataSource.deleteProduct(id).toPromise();
   }
 }
