@@ -18,7 +18,7 @@
           *ngFor="let category of categories$ | async"
           (click)="filterCategory(category)"
           class="btn btn-block btn-outline-primary"
-          [class.active]="category === selectedCategory"
+          [class.active]="category === (categorySubject | async)"
           type="button"
         >
           {{ category }}
@@ -52,7 +52,7 @@
             <label for="pageSize">Product Per Page</label>
             <select
               class="form-control"
-              [value]="productsPerPage"
+              [value]="pageSizeSubject | async"
               (click)="changePageSize($event.target.value)"
               id="pageSize"
             >
@@ -67,7 +67,7 @@
           <button
             *ngFor="let pageNum of pageNumbers$ | async; index as i"
             class="list-group-item list-group-item-action"
-            [class.active]="i === currentPage"
+            [class.active]="i === (currentPageSubject | async)"
             (click)="setCurrentPage(i)"
             type="button"
           >

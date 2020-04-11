@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { Product } from './product.model';
 import { Order } from './order.model';
+import { RestDataSource } from './rest.datasource';
 
 @Injectable({
   providedIn: 'root',
+  useClass: RestDataSource,
 })
 export class StaticDataSource {
   private products: Product[] = [
